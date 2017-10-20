@@ -1,1 +1,81 @@
+/*
+435. Max Consecutive Ones
+Given a binary array, find the maximum number of consecutive 1s in this array.
+
+Example 1:
+Input: [1,1,0,1,1,1]
+Output: 3
+Explanation: The first two digits or the last three digits are consecutive 1s.
+    The maximum number of consecutive 1s is 3.
+Note:
+
+The input array will only contain 0 and 1.
+The length of input array is a positive integer and will not exceed 10,000
+
+*/
+
+
+import java.io.*;
+import java.util.*;
+
+public class Solution 
+{
+    public static void main(String[] args) 
+    { 
+       Solution s= new Solution();
+       Scanner sc = new Scanner(System.in);
+       
+       
+        System.out.println("Enter the input size of array: ");
+        int i = sc.nextInt();
+        int a[] = new int[i];
+        System.out.println("Enter the array: ");
+        for(int j =0;j<i;j++)
+            a[j]= sc.nextInt();
+       
+        int result = s.findMaxConsecutiveOnes(a);
+        System.out.println("Result: "+ result);
+    }
+    
+    public int findMaxConsecutiveOnes(int[] num) 
+    {
+       int result=0;
+       int count=0;
+       int max =-1;//For max value, initialize the value to the least possible value. Can also use INTEGER.MIN_VALUE
+       int temp=-1;
+       
+       //We traverse through each and every element of the given array
+       //First we check if the element is equal to 1. If it is then we increment the value of count by 1. 
+       //We store the value of count in temp, since we need to compare it with the previous max value
+       //If the element is 0, we make the count as 0, since we need to start counting again.
+       //We have used temp=count, because the problem is in the worst case there might not be even a single 0 or 1 present
+       //In that case we will have we will not go in the 'if' and 'else' loop respectively
+       //So we need value to compare in the last if statement, we need to have value of temp and max
+       
+       for(int i=0;i<num.length;i++)
+       {
+           if(num[i] == 1)
+           { 
+               count++;
+                temp = count;
+           }
+           else
+           {
+               temp = count;
+               if(num[i]==0)
+               {
+                 count=0;    
+               }
+           }
+           if(max < temp)
+               max =temp; 
+       }
+       
+       
+       return max;
+    }
+    
+  
+}
+
 
