@@ -1,0 +1,322 @@
+BLACKROCK CODING TEST QUESTIONS FOR FULL TIME ANALYST ROLE
+
+Question 1: 
+
+The goal of this challenge is to design a cash register program. You will be given two decimal numbers. The first is the purchase price (PP) of the item. The second is the cash (CH) given by the customer. Your register currently has the following bills/coins within it: 
+'PENNY': .01,
+'NICKEL': .05,
+'DIME': .10,
+'QUARTER': .25,
+'HALF DOLLAR': .50,
+'ONE': 1.00,
+'TWO': 2.00,
+'FIVE': 5.00,
+'TEN': 10.00,
+'TWENTY': 20.00,
+'FIFTY': 50.00,
+'ONE HUNDRED': 100.00
+The aim of the program is to calculate the change that has to be returned to the customer.
+Input:
+Your program should read lines of text from standard input. Each line contains two numbers which are separated by a semicolon. The first is the Purchase price (PP) and the second is the cash(CH) given by the customer.
+Output:
+For each line of input print a single line to standard output which is the change to be returned to the customer. In case the CH < PP, print out ERROR. If CH == PP, print out ZERO. For all other cases print the amount that needs to be returned, in terms of the currency values provided. The output should be alphabetically sorted.
+
+
+Test Input Download Test Input: 15.94;16.00
+Expected Output Download Test Output: NICKEL,PENNY
+Test 2
+Test Input Download Test Input: 17;16
+Expected Output Download Test Output: ERROR
+Test 3
+Test Input Download Test Input: 35;35
+Expected Output Download Test Output: ZERO
+Test 4
+Test Input Download Test Input: 45;50
+Expected Output Download Test Output: FIVE
+
+ANSWER: 
+
+static String solution(String input)
+{
+    Double purchase_price = Double.parseDouble(input.split(";")[0]);
+    Double cash = Double.parseDouble(input.split(";")[1]);
+    HashMap<Double,String> prices = new HashMap();
+    StringBuilder result = new StringBuilder();
+    ArrayList<String> list = new ArrayList<>();
+    
+    float difference = cash - purchase_price;
+    
+    
+    if(difference == 0)
+        return "ZERO";
+    if(difference < 0.01) //COmment
+        return "ERROR";
+
+    prices.put(0.01f, "PENNY");
+    prices.put(0.05f, "NICKEL");
+    prices.put(0.10f, "DIME");
+    prices.put(0.25f, "QUARTER");
+    prices.put(0.50f, "HALF DOLLAR");
+    prices.put(1.00f, "ONE");
+    prices.put(2.00f, "TWO");
+    prices.put(5.00f, "FIVE");
+    prices.put(10.00f, "TEN");
+    prices.put(20.00f, "TWENTY");
+    prices.put(50.00f, "FIFTY");
+    prices.put(100.00f, "ONE HUNDRED");
+    
+    while(difference >= 0.01f)
+    {
+        if(difference >= 100.00f)
+        {
+            list.add(prices.get(100.00f));
+            difference = difference - 100.00f;
+        }
+        else if(difference >= 50.00f)
+           {
+             list.add(prices.get(50.00f));
+            difference = difference - 50.00f;
+           }
+        else if(difference >= 20.00f)
+                {
+             list.add(prices.get(20.00f));
+               difference = difference - 20.00f;
+                }
+        else if(difference >= 10.00f)
+           {
+            list.add(prices.get(10.00f));
+            difference = difference - 10.00f;
+           }
+        else if(difference >= 5.00f)
+           {
+             list.add(prices.get(5.00f));
+            difference = difference - 5.00f;
+           }
+        else if(difference >= 2.00f)
+           {
+             list.add(prices.get(2.00f));
+           difference = difference - 2.00f;
+           }
+        else if(difference >= 1.00f)
+           {
+             list.add(prices.get(1.00f));
+           difference = difference - 1.00f;
+           }
+        else if(difference >= 0.50f)
+           {
+             list.add(prices.get(0.50f));
+           difference = difference - 0.50f;
+           }
+        else if(difference >= 0.25f)
+           {
+             list.add(prices.get(0.25f));
+           difference = difference - 0.25f;
+           }
+        else if(difference >= 0.10f)
+           {
+             list.add(prices.get(0.10f));
+           difference = difference - 0.10f;
+           }
+        else if(difference >= 0.05f)
+           {
+             list.add(prices.get(0.05f));
+           difference = difference - 0.05f;
+           }
+        else 
+           {
+            list.add(prices.get(0.01f));
+           difference = difference - 0.01f;
+           }       
+    }
+    
+    Collections.sort(list);
+    for(String elem: list)
+        result.append(elem + ",");
+    
+    return result.toString().substring(0, (result.length()-1));
+}
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+Question 2:
+
+A person has taken a loan of $6000.00 with a fixed annual interest rate of 6% for 5 years with no down payment. The monthly payment has been fixed at $116.00 for entire term of the loan. Here is the formula to calculate monthly fixed payment: (NOTE: See attachment)
+
+    P = (monthly rate * Loan amount) / (1 - (1+monthly interest rate)^-n) Here n is the number of payment periods.
+Write a program to: 1. To calculate monthly payment 2. To print out monthly payment and total interest payment for the duration of loan rounded to its nearest integer
+
+Input:
+6000~5~6~0
+
+Output:
+$116.00~$960
+
+Test 1
+Test Input Download Test Input: 25000~10~6~0
+Expected Output Download Test Output: $277.55~$8306
+Test 2
+Test Input Download Test Input: 30000~10~6~5000
+Expected Output Download Test Output: $277.55~$8306
+Test 3
+Test Input Download Test Input: 5000~5~6~0
+Expected Output Download Test Output: $96.66~$800
+
+ANSWER: 
+static String solution(String input) 
+    {
+        Double monthly_payment;
+        Double interest_payment;
+        String result = "";
+        
+        Double loan_amount = Double.parseDouble(input.split("~")[0]);
+        Double years = Double.parseDouble(input.split("~")[1]);
+        Double interest = Double.parseDouble(input.split("~")[2]);
+        Double down_payment = Double.parseDouble(input.split("~")[3]);
+
+        Double period = 12 * years;
+        Double principal_amount = loan_amount - down_payment;
+        Double monthly_interest_rate = interest / (100 * 12);
+
+        monthly_payment = ((monthly_interest_rate * principal_amount)
+                / (1 - (Math.pow(1 + monthly_interest_rate, period * -1))));
+
+        interest_payment = monthly_payment * period - principal_amount;
+
+        result = String.format("$%,.2f", monthly_payment) + "~" + Math.round(interest_payment);
+        
+        return result;
+    }
+
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+Question 3:
+
+We say a portfolio matches the benchmark when the market value percentage of each asset in the portfolio matches the market value percentage of each asset in the benchmark. Your challenge is to write a program that determines the transactions necessary to make a portfolio match a benchmark, assuming the total market value of the portfolio stays the same.
+
+Background
+
+A portfolio is a collection of assets such as stocks and bonds. A portfolio could have 10 shares of Vodafone stock, 15 shares of Google stock and 15 shares of Microsoft bonds.
+
+A benchmark is also just a collection of assets. A benchmark could have 15 shares of Vodafone stock, 10 shares of Google stock and 15 shares of Microsoft bonds.
+
+The market value of a stock is 
+shares * price
+The market value of a bond is
+shares * (price + accrued interest) * 0.01
+
+A transaction is when you “buy” or “sell” a particular asset. For instance, you can decide to buy 5 shares of Vodafone stock which, given the portfolio described above, would result in you having 15 shares of Vodafone stock.
+
+An asset’s market value percentage can be calculated by dividing the market value of the asset by the total market value of every asset in the portfolio or benchmark. For example, given the portfolio described above and assuming all assets have a price of 5 and accrued interest is 0.05, the market value percentage of Vodafone would be
+(10 * 5) / ( (10 * 5) + (15 * 5) + (15 * (5 + 0.05) * 0.01) )
+
+Inputs and Outputs
+
+You will receive a string in the following format Portfolio:Benchmark where Portfolio & Benchmark each are in the same format.
+
+Here is the format: Name,AssetType,Shares,Price,AccruedInterest where each asset within Portfolio or Benchmark is separated by '|' symbol.
+
+The output for the transactions is TransactionType,Name,Shares
+
+Assumptions
+
+Shares & Price are positive decimals
+There will always be at least 1 asset present in the Portfolio and Benchmark
+A particular asset will only be a stock or a bond, but not both
+The final trades should be rounded to the nearest decimals
+The trades should be sorted in ascending order based on the names of the assets
+Input:
+Vodafone,STOCK,10,50,0|Google,STOCK,15,50,0|Microsoft,BOND,15,100,0.05:Vodafone,STOCK,15,50,0|Google,STOCK,10,50,0|Microsoft,BOND,15,100,0.05
+
+Output:
+BUY,Vodafone,5
+SELL,Google,5
+
+Test 1
+Test Input Download Test Input: Google,STOCK,10,50,0|Microsoft,STOCK,15,50,0|IBM,BOND,15,100,0.05:IBM,BOND,20,100,0.05|Google,STOCK,15,50,0|Microsoft,STOCK,10,50,0.05
+Expected Output Download Test Output: 
+BUY,Google,5
+BUY,IBM,5
+SELL,Microsoft,5
+
+Test 2
+Test Input Download Test Input: 
+Vodafone,STOCK,10,50,0|Google,STOCK,15,50,0|Microsoft,BOND,15,100,0.05:Vodafone,STOCK,15,50,0|Google,STOCK,10,50,0|Microsoft,BOND,15,100,0.05
+Expected Output Download Test Output: 
+SELL,Google,5
+BUY,Vodafone,5 
+
+ANSWER: 
+
+static String solution(String input) 
+    {
+       StringBuilder result = new StringBuilder();
+       
+       //First split the string using colon so that we get the portfolio and benchmark values
+       String portfolio_values = input.split(":")[0];
+       String benchmark_values = input.split(":")[1];
+      
+       //We need to get the different portfolio and benchmark values so split using |
+       String[] port_asset = portfolio_values.split("\\|");
+       String[] bench_asset = benchmark_values.split("\\|");
+       
+       HashMap<String, Pair<Integer, Float>> portfolio = new HashMap<>();
+       HashMap<String, Pair<Integer, Float>> benchmark = new HashMap<>();
+       
+       //Iterate through each item of the portfolio and add it to the map
+       for(String elem: port_asset)
+       { 
+           //If the type of asset is bond then we add the name of the asset and a pair of values which is calculated by (price + accured interest) * 0.01
+           if(elem.split(",")[1].equals("BOND"))
+           {
+               portfolio.put(elem.split(",")[0], new Pair(Integer.parseInt(elem.split(",")[2]), 0.01f * (Float.parseFloat(elem.split(",")[3]) + Float.parseFloat(elem.split(",")[4]) )) );
+           }
+           else
+           {
+                portfolio.put(elem.split(",")[0], new Pair(Integer.parseInt(elem.split(",")[2]), Float.parseFloat(elem.split(",")[3])) );
+           }
+       }
+       
+        //Iterate through each item of the portfolio and add it to the map
+       for(String elem: bench_asset)
+       { 
+           if(elem.split(",")[1].equals("BOND"))
+           {
+               benchmark.put(elem.split(",")[0], new Pair(Integer.parseInt(elem.split(",")[2]), 0.01f * (Float.parseFloat(elem.split(",")[3]) + Float.parseFloat(elem.split(",")[4]) )) );
+           }
+           else
+           {
+                benchmark.put(elem.split(",")[0], new Pair(Integer.parseInt(elem.split(",")[2]), Float.parseFloat(elem.split(",")[3])) );
+           }
+       }
+       
+       //Iterate through each entry in the portfolio map, and then we check difference between the portfolio and benchmark values we find the price difference 
+       portfolio.forEach((p_key, p_value) -> {
+         
+            Pair<Integer, Float> b_value = benchmark.get(p_key);
+            Float p_final_price = p_value.getKey() * p_value.getValue();
+            Float b_final_price =  (b_value.getKey() * b_value.getValue());
+           
+            if(p_final_price - b_final_price < 0)
+            {
+                result.append("BUY," + p_key + ",");
+                result.append(Math.round((b_final_price - p_final_price)/p_value.getValue()) );
+                result.append("\n");
+            }
+           if(p_final_price - b_final_price > 0)
+            {
+                result.append("SELL," + p_key + ",");
+                result.append(Math.round((p_final_price - b_final_price)/p_value.getValue()) );
+                result.append("\n");
+            }
+           
+        });
+        
+        return result.toString().substring(0, result.length()-1);
+      
+    }
+
