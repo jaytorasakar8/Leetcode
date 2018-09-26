@@ -1,0 +1,536 @@
+SAMPLE QUESTIONS
+-------------------------------------------------------------------------------------------------
+1 . Given an unsorted array of n elements, find if the element k is present in the array or not.
+
+
+
+Complete the findNumber function in the editor below. It has 2 parameters:
+
+
+
+An array of integers, arr, denoting the elements in the array.
+
+An integer, k, denoting the element to be searched in the array.
+
+The function must return a string "YES" or "NO" denoting if the element is present in the array or not.
+
+
+
+Input Format
+
+
+
+The first line contains an integer n, denoting the number of elements in the array arr.
+
+
+
+Each line i of the n subsequent lines (where 0 ≤ i < n) contains an integer describing arri.
+
+
+
+The next line contains an integer, k, the element that needs to be searched. 
+
+
+
+Constraints
+
+
+1 ≤ n ≤ 105
+
+1 ≤ arr[i] ≤ 109
+
+
+Output Format
+
+The function must return a string "YES" or "NO" denoting if the element is present in the array or not. This is printed to stdout by locked stub code in the editor.
+
+
+
+
+
+Sample Input 0
+
+
+
+5
+
+1
+
+2
+
+3
+
+4
+
+5
+
+1
+
+
+Sample Output 0
+
+YES
+
+
+Explanation 0
+
+Given the array = [1, 2, 3, 4, 5], we want to find the element 1 if it is present or not. We can find the element 1 at index = 0. Therefore we print "YES".
+
+
+Sample Input 1
+
+
+3
+
+2
+
+3
+
+1
+
+5
+
+
+Sample Output 1
+
+NO
+
+Explanation 1
+
+
+
+Given the array [2, 3, 1] and k = 5. There is no element 5 in the array and therefore we print "NO".
+
+
+Q2. Given two integers, l and r, print all the odd numbers between l and r (l and r inclusive). 
+
+
+
+Complete the oddNumbers function in the editor below. It has 2 parameters:
+
+
+
+An integer, l, denoting the left part of the range.
+
+An integer, r, denoting the right part of the range.
+
+The function must return an array of integers denoting the odd numbers between l and r.
+
+
+
+Input Format
+
+
+
+Locked stub code in the editor reads the following input from stdin and passes it to the function:
+
+
+
+The first line contains an integer, l, denoting the left part of the range.
+
+
+
+The second line contains an integer, r, denoting the right part of the range.
+
+
+
+Constraints
+
+
+
+1 ≤ l ≤ r ≤ 105
+
+
+
+Output Format
+
+
+
+The function must return an array of integers denoting the odd numbers between l and r. This is printed to stdout by locked stub code in the editor.
+
+
+
+Sample Input 0
+
+
+
+2
+
+5
+
+
+Sample Output 0
+
+
+
+3
+
+5
+
+
+
+Explanation 0
+
+
+
+The value of l is 2 and value of r is 5. The odd numbers between [2, 5] are 3 and 5.
+
+
+
+Sample Input 1
+
+3
+
+9
+
+
+
+Sample Output 1
+
+
+
+3
+
+5
+
+7
+
+9
+
+
+
+Explanation 1
+
+
+
+The value of l is 3 and value of r is 9. The odd numbers between [3, 9] are 3, 5, 7 and 9.
+
+Solution: 
+static List<Integer> oddNumbers(int l, int r) {
+        int count = 0;
+        ArrayList<Integer> list = new ArrayList();
+        for(int i = l; i<= r; i++)
+        {
+            if(i%2 != 0)
+                list.add(i);
+        }
+return list;
+    }
+
+
+
+Q3. Which of the following sorting algorithms has the best asymptotic runtime complexity?
+
+
+
+Pick one of the choices
+
+Bubble Sort
+
+Heap Sort
+
+Selection Sort
+
+Insertion Sort
+
+
+
+--------------------------------------------------------------------------------------------------
+ACTUAL TEST QUESTIONS
+
+
+1. Maximum Difference in an Array
+You are given an array of integers and must compute the maximum difference between any item and any lower indexed smaller item for all the possible pairs, i.e., for a given array a find the maximum value of a[j] - a[i] for all i, j where 0 ≤ i < j < n and a[i] < a[j]. If no item has a smaller item with a lower index then return -1.
+
+ 
+
+For example, given an array [ 1, 2, 6, 4], you would first compare 2 to the elements to its left.  1 is smaller, so calculate the difference 2 - 1 = 1.  6 is bigger than 2 and 1, so calculate the differences 4 and 5.  4 is only bigger than 2 and 1, and the differences are 2 and 3.  The largest difference was 6 - 1 = 5.
+
+ 
+
+Function Description 
+
+Complete the function maxDifference in the editor below. The function must return an integer representing the maximum difference in a.
+
+ 
+
+maxDifference has the following parameter(s):
+
+    a[a[0],a[1],...a[n-1]]:  an array of integers
+
+ 
+
+Constraints
+
+1 ≤ n ≤ 2 × 105
+−106 ≤ a[i] ≤ 106 ∀ i ∈ [0, n − 1]
+ 
+
+Input Format For Custom Testing
+Sample Case 0
+Sample Input 0
+
+7
+2
+3
+10
+2
+4
+8
+1
+Sample Output
+
+8
+Explanation
+
+n = 7, a = [2, 3, 10, 2, 4, 8, 1]
+
+ 
+
+Differences are calculated as:
+
+3 - [2] = [1]
+10 - [3, 2] = [7, 8]
+4 - [2, 3, 2] = [2, 1, 2]
+8 - [4, 2, 3, 2] = [4, 6, 5, 6]
+ 
+
+The maximum is found at 10 - 2 = 8.
+
+Solution: 
+static int maxDifference(int[] a) {
+        int min = Integer.MAX_VALUE;
+        int max = 0;
+        for(int i = 0; i< a.length; i++)
+        {
+            if(a[i] < min)
+                min = a[i];
+            else
+                if(a[i] - min > max)
+                    max = a[i] - min;
+        }
+         return max == 0 ? -1 : max;
+    }
+
+
+
+Q2. A company stores employee and department information in two data tables: Employee and Department. Write a query to print the respective department name and number of employees in each department for all departments in the Department table (even ones with no current employees). Sort the results by descending order of the number of employees; if two or more departments have the same number of employees, then sort those departments alphabetically by department name.
+
+Each row of the resulting output must contain the following respective attributes for a department:
+
+The name of the department
+The number of employees in the department
+DEPARTMENT.NAME COUNT_OF_EMPLOYEES_IN_THE_DEPARTMENT
+
+
+EMPLOYEE
+Name	Type	Description
+ID	Integer	A number which uniquely identifies the employee. This is a primary key.
+NAME	String	The name of the employee.
+SALARY	Integer	The salary of the employee.
+DEPT_ID	Integer	The department identification of the respective employee. This is a foreign key to DEPARTMENT.ID.
+DEPARTMENT
+Name	Type	Description
+ID	Integer	The department's unique identification number. This is a primary key.
+NAME	String	The name of the department.
+LOCATION	String	The place where the department is located.
+
+SELECT DEPARTMENT.NAME, COUNT(EMPLOYEE.ID)
+FROM DEPARTMENT LEFT JOIN EMPLOYEE
+ON DEPARTMENT.ID = EMPLOYEE.DEPT_ID
+GROUP BY DEPARTMENT.ID, DEPARTMENT.NAME
+ORDER BY COUNT(EMPLOYEE.ID) DESC, DEPARTMENT.NAME;
+
+Q3. In this challenge, you will be asked to build on an abstract class and initialize an instance of each class with a variable.   The program will then test your implementation by retrieving the data you stored.
+
+ 
+
+The locked code in the editor does the following:
+
+Declares an abstract class named Animal with the implementations for getIsMammal() and getIsCarnivorous() methods, as well as an abstract method named getGreeting().
+Creates Dog, Cow, and Duck objects.
+Calls the getIsMammal(), getIsCarnivorous(), and getGreeting() methods on each of these respective objects.
+
+Complete the code in the editor below to implement the following:
+
+Three classes named Dog, Cow, and Duck that inherit from the Animal class.
+No-argument constructors for each class that initialize the instance variables inherited from the superclass.
+Each class must implement the getGreeting() method:
+For a Dog object, this must return the string ruff.
+For a Cow object, this must return the string moo.
+For a Duck object, this must return the string quack.
+ 
+
+Input Format
+
+There is no input for this challenge.
+
+ 
+
+Output Format
+
+The getGreeting() method must always return a string denoting the appropriate greeting for the implementing class.
+
+ 
+
+Sample Output
+
+A dog says 'ruff', is carnivorous, and is a mammal.
+A cow says 'moo', is not carnivorous, and is a mammal.
+A duck says 'quack', is not carnivorous, and is not a mammal.
+
+
+abstract class Animal {
+    protected boolean isMammal;
+    protected boolean isCarnivorous;
+    
+    public Animal(boolean isMammal, boolean isCarnivorous) {
+        this.isMammal = isMammal;
+        this.isCarnivorous = isCarnivorous;
+    }
+    
+    public boolean getIsMammal() {
+        return this.isMammal;
+    }
+    
+    public boolean getIsCarnivorous() {
+        return this.isCarnivorous;
+    }
+    
+    abstract public String getGreeting();
+    
+    public void printAnimal(String name) {
+        System.out.println( 
+        	"A " + name + " says '" + this.getGreeting() 
+            + "', is " + (this.getIsCarnivorous() ? "" : "not ") 
+        	+ "carnivorous, and is " + (this.getIsMammal() ? "" : "not ") + "a mammal."
+        );
+    }
+}
+
+
+class Dog extends Animal {
+    public Dog() {
+        super(true, true);
+    }
+    
+    public String getGreeting() {
+        return "ruff";
+    } 
+    
+}
+
+/**
+*   Cow class
+**/
+class Cow extends Animal {
+    public Cow() {
+        super(true, false);
+    }
+    
+    public String getGreeting() {
+        return "moo";
+    } 
+    
+}
+
+/**
+*   Duck class
+**/
+class Duck extends Animal {
+    public Duck() {
+        super(false, false);
+    }
+    
+    public String getGreeting() {
+        return "quack";
+    } 
+    
+}
+
+
+
+HackLand Election
+In elections that use the ballot box system for voting, each voter writes the name of a candidate on a ballot and places it in the ballot box. The candidate with the highest number of votes wins the election. If two or more candidates have the same number of votes, then the tied candidates' names are ordered alphabetically and the last name in the alphabetical order wins.
+
+ 
+
+For example, votes are in the names ['Joe', 'Mary', 'Mary', 'Joe']. Each candidate received two votes, but Mary is alphabetically later than Joe, so she wins.
+
+ 
+
+Function Description 
+
+Complete the function electionWinner in the editor below. The function must return a string denoting the name of the winning candidate.
+
+ 
+
+electionWinner has the following parameter(s):
+
+    votes[votes[0],...votes[n-1]]:  an array of strings representing the names of the candidates as voted by the ith voter.
+
+ 
+
+Constraints
+
+1 ≤ n ≤ 104
+
+Sample Input 0
+
+10
+Alex
+Michael
+Harry
+Dave
+Michael
+Victor
+Harry
+Alex
+Mary
+Mary
+Sample Output 0
+
+Michael
+Explanation 0
+
+The votes tally is:
+
+2 votes: Alex, Harry, Michael, Mary
+1 vote: Dave, Victor
+The highest vote count is 2, and among those receiving 2 votes, the last name alphabetically is Michael
+
+
+static String electionWinner(String[] votes) {
+        
+        HashMap<String, Integer> map = new HashMap<>();
+        int max_votes = 0;
+        String winner = "";
+        
+        for(String vote : votes)
+        {
+            if(map.containsKey(vote))
+            {
+                map.put(vote, map.get(vote)+1);
+                  
+            }
+            else
+            {
+                map.put(vote, 1);
+                
+            }
+            
+            if(map.get(vote) > max_votes)
+                {
+                    max_votes = map.get(vote);
+                    winner = vote;
+                }
+            else
+                if(map.get(vote) == max_votes)
+                    if(vote.compareTo(winner) > 0)
+                        winner = vote;
+        }
+        
+        return winner;
+        
+        
+    }
