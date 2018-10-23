@@ -1,0 +1,44 @@
+Q1. Check if the given tree is a balanced binary tree
+
+public boolean isBalanced(TreeNode root) {    
+        if(root == null) 
+		return true;
+        int left = maxDepth(root.left);
+        int right = maxDepth(root.right);
+        if(Math.abs(left-right)>1) 
+		return false;
+        return isBalanced(root.left) & isBalanced(root.right);
+    }
+		
+    public int maxDepth(TreeNode root){
+        if(root == null) return 0;
+        return 1  + Math.max(maxDepth(root.left), maxDepth(root.right));
+    }
+
+
+Q2. Merge two given sorted Linked List
+public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+    ListNode head = new ListNode(0);
+    ListNode p = head;
+ 
+    while(l1!=null||l2!=null){
+        if(l1!=null&&l2!=null){
+            if(l1.val < l2.val){
+                p.next = l1;
+                l1=l1.next;
+            }else{
+                p.next=l2;
+                l2=l2.next;
+            }
+            p = p.next;
+        }else if(l1==null){
+            p.next = l2;
+            break;
+        }else if(l2==null){
+            p.next = l1;
+            break;
+        }
+    }
+ 
+    return head.next;
+}
