@@ -1,0 +1,47 @@
+Q. Given two lists, and an order of the colors, return a single list in the order of the color priority      
+
+
+static void solution (String input)
+    {
+        ArrayList<String> list = new ArrayList<>();
+        ArrayList<String> list1 = new ArrayList(Arrays.asList("red", "blue", "green"));
+        ArrayList<String> list2 = new ArrayList(Arrays.asList("red", "red", "green", "violet"));
+        
+        HashMap<String, Integer> map = new HashMap();
+        
+        map.put("red", 1);
+        map.put("blue", 2);
+        map.put("green", 3);
+        map.put("violet", 4);
+        
+        while(!list1.isEmpty() && !list2.isEmpty())
+        {
+            if(map.get(list1.get(0)) == map.get(list2.get(0)))
+            {
+                list.add(list1.get(0));
+                list.add(list2.get(0));
+                list1.remove(0);
+                list2.remove(0);
+            }
+            else if(map.get(list1.get(0)) < map.get(list2.get(0)))
+            {
+                list.add(list1.get(0));
+                list1.remove(0);
+            }
+            else if(map.get(list1.get(0))> map.get(list2.get(0)))
+            {
+                list.add(list2.get(0));
+                list2.remove(0);
+            }
+        }
+        
+        if(!list1.isEmpty())
+            list.addAll(list1);
+        if(!list2.isEmpty())
+            list.addAll(list2);
+        
+        System.out.println(list);
+         
+    }
+
+Output: {red,red,red, blue, green, green, violet}
