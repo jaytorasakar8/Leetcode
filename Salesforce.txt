@@ -1,0 +1,149 @@
+Q1. Find the substring after the given substring in a given string.
+
+
+String s = "JayTorasakar";
+String subs = "sa";
+System.out.println(s.substring(s.indexOf(subs)+ subs.length()));
+
+O/p: kar
+
+
+Q2. Given a target difference, find how many pairs would be giving that difference 
+
+static void kdifference()
+    {
+        int[] arr = {-1, 1, 5, 3, 4, 2};
+        int diff=3;
+        HashSet<Integer> set = new HashSet<>();
+        
+        for(int i: arr)
+        {
+            set.add(i);
+        }
+        
+        Iterator itr = set.iterator();
+        int count =0;
+        
+        while(itr.hasNext())
+        {
+            int elem = (int) itr.next();
+            if(set.contains(elem+diff))
+            {
+                count++;
+                itr.remove();
+            }
+        }
+            System.out.println(count);
+    }       
+
+
+
+
+Q3. Given upper and lower limits and a array of numbers, find the difference of upper and lower bound
+In the given example: In the first case, lower bound is 2 and upper bound is 8. So we get Return index as 0 and 3 respectively. Since the numbers are sorted, we are trying to get the lower bound of 2 is 0(Bcoz the number 2 doesn't exist in the given array) The upper bound of 8 is 3(After sorting, the number 8 is present at index 2, so the upper bound is = 2+1 = 3)  
+
+static void bound()
+    {
+        int[] lower = {2,4};
+        int[] upper = {8,4};
+        int[] numbers = {4,8,7};
+        
+        Arrays.sort(numbers);
+        
+       
+        ArrayList<Integer> list = new ArrayList<>();
+        
+        for(int i=0;i<lower.length;i++)
+        {
+            int l = lower_bound(numbers, numbers.length, lower[i] );
+            int u = upper_bound(numbers, numbers.length, upper[i]);
+            int result = u - l;
+            list.add(result);
+        }
+        System.out.println(list);
+        
+    }
+    static int lower_bound(int a[], int n, int x)
+    {
+     
+    int l = 0;
+    int h = n; // Not n - 1
+    while (l < h) {
+        int mid = (l + h) / 2;
+        if (x <= a[mid]) {
+            h = mid;
+        } else {
+            l = mid + 1;
+        }
+    }
+     return l;
+}
+    
+    static int upper_bound(int a[], int n, int x) 
+    {
+    int l = 0;
+    int h = n; // Not n - 1
+    while (l < h) {
+        int mid = (l + h) / 2;
+        if (x >= a[mid]) {
+            l = mid + 1;
+        } else {
+            h = mid;
+        }
+    }
+      
+    return l;
+}
+
+Output: [3,1]
+
+
+Q4. Given a string, find the repeated character index of the highest occured character based on the second highest occurence of character.
+Eg: In string sshhssii, we have count of s =4,i =2 and h =2, so the highest count is of s and second highest count is of h. So we need to return the occurence of second highest character count(i.e. h=2 and add 1 to it), and then return index position of the 3rd occurence of s    
+
+
+ static void solution()
+    {
+       String s= "sshhssii";
+       HashMap<Character, ArrayList> map = new HashMap();
+       
+        for(int i=0;i<s.length();i++)
+        {
+            char c = s.charAt(i);
+            ArrayList temp ;
+            if(map.containsKey(c))
+            {
+                temp = map.get(c);
+                temp.add(i);
+                map.put(c, temp);
+            }
+            else
+            {
+                temp = new ArrayList();
+                temp.add(i);
+                map.put(c, temp);
+            }
+        }
+        System.out.println(map);
+        int max1 = Integer.MIN_VALUE, max2 = 0;
+       
+        ArrayList<Integer> finalList = null;
+        for(Map.Entry<Character,ArrayList> entry: map.entrySet())
+        {
+            if(max1 < (int)(entry.getValue().size()))
+            {
+                finalList = entry.getValue();
+                max1 = entry.getValue().size();
+                
+                System.out.println();
+            }
+            if(max2 < max1 && max2 < entry.getValue().size())
+            {
+                max2 = entry.getValue().size();
+            }
+        }
+        
+        System.out.println(max2);
+    }
+
+Output: 3rd occurence of s in string is at index = 4
