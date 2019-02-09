@@ -1,0 +1,308 @@
+Q1. A gene can be represented by a string that is 8 characters long and contains only the characters 'A', 'C', 'G', and 'T'. You want to investigate the number of mutations that it takes to get from startStr to endStr, where one mutation is defined as a change to one single character in the gene string. You also have a bank that contains a listing of all valid gene mutations. A gene must be in the bank in order to be considered a valid gene string mutation.
+
+Determine the minimum number of valid mutations needed to obtain endStr from startStr. startStr is assumed to be valid, so it might not be included in the bank. If multiple mutations are needed, all mutations in the sequence must be valid. You may also assume that startStr and endStr are distinct. If there is no such mutation, return -1.
+
+Example
+
+For startStr = "AACCGGTT", endStr = "AACCGGTA",
+and bank = ["AACCGGTA"], the output should be
+minimumGeneticMutation(startStr, endStr, bank) = 1.
+
+"AACCGGTT" -> "AACCGGTA" represents 1 mutation.
+
+For startStr = "AACCGGTT", endStr = "AAACGGTA",
+and bank = ["AACCGGTA", "AACCGCTA", "AAACGGTA"], the output should be
+minimumGeneticMutation(startStr, endStr, bank) = 2.
+
+It takes 2 mutations to get from startStr to endStr: "AACCGGTT" -> "AACCGGTA", then "AACCGGTA" -> "AAACGGTA".
+
+For startStr = "AAAAACCC", endStr = "AACCCCCC",
+and bank = ["AAAACCCC", "AAACCCCC", "AACCCCCC"], the output should be
+minimumGeneticMutation(startStr, endStr, bank) = 3.
+
+It takes 2 mutations to get from startStr to endStr: "AAAAACCC" -> "AAAACCCC", then "AAAACCCC" -> "AAACCCCC", then "AAACCCCC" -> "AACCCCCC".
+
+Input/Output
+
+[execution time limit] 3 seconds (java)
+
+[input] string startStr
+
+Guaranteed constraints:
+startStr.length = 8,
+startStr[i] ∈ {'A', 'C', 'G', 'T'}.
+
+[input] string endStr
+
+Guaranteed constraints:
+endStr.length = 8,
+endStr[i] ∈ {'A', 'C', 'G', 'T'}.
+
+[input] array.string bank
+
+An array containing strings that represent valid mutations.
+
+Guaranteed constraints:
+0 ≤ bank.length ≤ 100,
+bank[i].length = 8,
+bank[i][j] ∈ {'A', 'C', 'G', 'T'}
+
+
+SOLUTION: int minimumGeneticMutation(String start, String end, String[] bank) {
+    char[] changes = new char[]{'A', 'T', 'C', 'G'};
+    // Convert string array to Set
+        Set<String> set = new HashSet<>();
+        for (String s : bank) {
+            set.add(s);
+        }
+        Queue<String> queue = new LinkedList<>();
+        queue.offer(start);
+        int count = 0;
+        while (! queue.isEmpty()) {
+            int size = queue.size();
+            for (int idx = 0; idx < size; idx++) {
+                String curr = queue.poll();
+                if (curr.equals(end)) {
+                    return count;
+                }
+                for (int i = 0; i < curr.length(); ++i) {
+                    for (int j = 0; j < 4; j++) {
+                        if (curr.charAt(i) != changes[j]) {
+                            StringBuilder sb = new StringBuilder();
+                            sb.append(curr.substring(0, i));
+                            sb.append(changes[j]);
+                            sb.append(curr.substring(i + 1));
+                            String tmp = sb.toString();
+                            if (set.contains(tmp)) {
+                                queue.offer(tmp);
+                                set.remove(tmp);
+                            }
+                        }
+                    }
+                }
+            }
+            count++;
+        }
+        return -1;
+    }
+
+
+
+
+
+Q2. You are most likely familiar with the game 2048.
+
+2048 is played on a gray 4 × 4 grid with numbered tiles that slide smoothly when a player moves them using one of the four arrow keys - Up, Down, Left or Right. On every turn, a new tile with a value of either 2 or 4 randomly appears on an empty spot of the board. After one of the keys is pressed, the tiles slide as far as possible in the chosen direction until they are stopped either by another tile or by the edge of the grid. If two tiles with the same number collide while moving, they merge into a tile with this number doubled. You can't merge an already merged tile in the same turn. If there are more than 2 tiles in the same row (column) that can merge, the farthest (closest to an edge) pair will be merged first (see the second example).
+
+In this problem you are not going to solve the 2048 puzzle, but you are going to find the final state of the board from the given one after a defined set of n arrow key presses, assuming that no new random tiles will appear on the empty spots.
+
+The following example shows the next state of the board after pressing Right.
+
+This example shows the next state of the board after pressing Down.
+
+
+For more details you can visit http://gabrielecirulli.github.io/2048/ and play online 😃
+
+You are given a matrix 4 × 4 which corresponds to the 2048 game grid. grid[0][0] corresponds to the upper left tile of the grid. Each element of the grid is equal to some power of 2 if there is a tile with that value in the corresponding position, and 0 if it corresponds to the empty spot.
+You are also given a sequence of key presses as a string path. Each character of the string equals L, R, U, or D corresponding to Left, Right, Up or Down respectively.
+Please note that in some cases after pressing an arrow key nothing will be changed.
+
+Example
+
+For
+
+grid = [[0, 0, 0, 0],
+        [0, 0, 2, 2],
+        [0, 0, 2, 4],
+        [2, 2, 4, 8]]
+and path = "RR", the output should be
+
+game2048(grid, path) = [[0, 0, 0, 0],
+                        [0, 0, 0, 4],
+                        [0, 0, 2, 4],
+                        [0, 0, 8, 8]]
+
+
+SOLUTION: 
+public boolean move(Direction direction) {
+    boolean didMove = false;
+    int multiplier = 2;
+    if (direction == Direction.RIGHT) {
+
+        // int i represents rows; int j represents columns
+        for (int i = 0; i < GRID_SIZE; i++) {
+            ArrayList<Integer> slideTile = new ArrayList<>();
+
+            // Copying row w/o 0s to ArrayList
+            for (int j = 0; j < GRID_SIZE; j++) {
+                if (grid[i][j] != 0) {
+                    slideTile.add(grid[i][j]);
+                }
+            }
+
+            // Merging tiles that are next to each other if
+            // they are equal and updating score.
+            for (int j = slideTile.size() - 1; j > 0; j--) {
+                if (slideTile.get(j).equals(slideTile.get(j - 1))) {
+                    slideTile.set(j, multiplier * slideTile.get(j - 1));
+                    score = score + multiplier * slideTile.get(j - 1);
+                    slideTile.set(j - 1, 0);
+                }
+            }
+
+            // Removing 0s that may have resulted from merging
+            for (int j = 0; j < slideTile.size(); j++) {
+                if (slideTile.get(j) == 0) {
+                    slideTile.remove(j);
+                }
+            }
+
+            // Adding 0s to beginning of ArrayList to slide tiles right
+            int size = slideTile.size();
+            for (int j = 0; j < (GRID_SIZE - size); j++) {
+                slideTile.add(0, 0);
+            }
+
+            // Copying ArrayList row back to game grid.
+            for (int j = 0; j < GRID_SIZE; j++) {
+                this.grid[i][j] = slideTile.get(j);
+            }
+        }
+        didMove = true;
+    }
+
+    if (direction == Direction.LEFT) {
+
+        // int i represents rows; int j represents columns
+        for (int i = 0; i < GRID_SIZE; i++) {
+            List<Integer> slideTile = new ArrayList<>();
+
+            // Copying row w/o 0s to ArrayList
+            for (int j = 0; j < GRID_SIZE; j++) {
+                if (grid[i][j] != 0) {
+                    slideTile.add(grid[i][j]);
+                }
+            }
+
+            // Merging tiles that are next to each other if
+            // they are equal and updating score.
+            for (int j = 0; j < slideTile.size() - 1; j++) {
+                if (slideTile.get(j).equals(slideTile.get(j + 1))) {
+                    slideTile.set(j, multiplier * slideTile.get(j + 1));
+                    score = score + multiplier * slideTile.get(j + 1);
+                    slideTile.set(j + 1, 0);
+                }
+            }
+
+            // Removing 0s that may have resulted from merging
+            for (int j = 0; j < slideTile.size(); j++) {
+                if (slideTile.get(j) == 0) {
+                    slideTile.remove(j);
+                }
+            }
+
+            // Adding 0s to end of ArrayList to slide tiles left
+            int size = slideTile.size();
+            for (int j = 0; j < (GRID_SIZE - size); j++) {
+                slideTile.add(0);
+            }
+
+            // Copying ArrayList row back to game grid.
+            for (int j = 0; j < GRID_SIZE; j++) {
+                this.grid[i][j] = slideTile.get(j);
+            }
+        }
+        didMove = true;
+    }
+
+    if (direction == Direction.UP) {
+
+        // int i represents rows; int j represents columns
+        for (int j = 0; j < GRID_SIZE; j++) {
+            ArrayList<Integer> slideTile = new ArrayList<>();
+
+            // Copying row w/o 0s to ArrayList
+            for (int i = 0; i < GRID_SIZE; i++) {
+                if (grid[i][j] != 0)
+                    slideTile.add(grid[i][j]);
+
+            }
+
+            // Merging tiles that are next to each other if
+            // they are equal and updating score.
+            for (int i = 0; i < slideTile.size() - 1; i++) {
+                if (slideTile.get(i).equals(slideTile.get(i + 1))) {
+                    slideTile.set(i, multiplier * slideTile.get(i + 1));
+                    System.out.println(slideTile.get(i));
+                    score = score + multiplier * slideTile.get(i + 1);
+                    slideTile.set(i + 1, 0);
+                }
+            }
+
+            // Removing 0s that may have resulted from merging
+            for (int i = 0; i < slideTile.size(); i++) {
+                if (slideTile.get(i) == 0) {
+                    slideTile.remove(i);
+                }
+            }
+
+            // Adding 0s to end of ArrayList to slide tiles up
+            int size = slideTile.size();
+            for (int i = 0; i < (GRID_SIZE - size); i++) {
+                slideTile.add(0);
+            }
+
+            // Copying ArrayList row back to game grid.
+            for (int i = 0; i < GRID_SIZE; i++) {
+                this.grid[i][j] = slideTile.get(i);
+            }
+
+        }
+        didMove = true;
+    }
+
+    if (direction == Direction.DOWN) {
+
+        // int i represents rows; int j represents columns
+        for (int j = 0; j < GRID_SIZE; j++) {
+            ArrayList<Integer> slideTile = new ArrayList<>();
+
+            // Copying row w/o 0s to ArrayList
+            for (int i = 0; i < GRID_SIZE; i++) {
+                if (grid[i][j] != 0) {
+                    slideTile.add(grid[i][j]);
+                }
+            }
+
+            // Merging tiles that are next to each other if
+            // they are equal and updating score.
+            for (int i = slideTile.size() - 1; i > 0; i--) {
+                if (slideTile.get(i).equals(slideTile.get(i - 1))) {
+                    slideTile.set(i, multiplier * slideTile.get(i - 1));
+                    score = score + multiplier * slideTile.get(i - 1);
+                    slideTile.set(i - 1, 0);
+                }
+            }
+
+            // Removing 0s that may have resulted from merging
+            for (int i = 0; i < slideTile.size(); i++) {
+                if (slideTile.get(i) == 0) {
+                    slideTile.remove(i);
+                }
+            }
+
+            // Adding 0s to end of ArrayList to slide tiles up
+            int size = slideTile.size();
+            for (int i = 0; i < (GRID_SIZE - size); i++) {
+                slideTile.add(0, 0);
+            }
+
+            // Copying ArrayList row back to game grid.
+            for (int i = 0; i < GRID_SIZE; i++) {
+                this.grid[i][j] = slideTile.get(i);
+            }
+        }
+        didMove = true;
+    }
+    return didMove;
+}
