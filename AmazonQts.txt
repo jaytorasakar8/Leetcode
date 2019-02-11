@@ -1,0 +1,204 @@
+Q1. You are given a starting point of (0,0) and given a list of coordinates of restaurants, you need to get Top K closest distance restaurants near to the starting point.
+Input = [[1,2],[3,4], [1,-1]] and k = 2
+output = [[1,-1], [1,2]]
+
+SOLUTION: 
+List<List<Integer>> getClosestKElems(List<List<Integer>> locations, int k)
+    
+    HashMap<int[],Integer> map = new HashMap<>();
+    for(List<Integer> l: locations){
+           int[] coordinates = new int[]{l.get(0),l.get(1)};
+           int distance = l.get(0)*l.get(0)+l.get(1)*l.get(1);
+           map.put(coordinates,distance );
+         }
+       
+       PriorityQueue<Map.Entry<int[],Integer>> pq = new PriorityQueue<>((a,b) -> (a.getValue() - b.getValue()));
+       
+       for(Map.Entry<int[], Integer> entry: map.entrySet())
+       {
+           pq.offer(entry);
+ //You can also have a PQ of size k and add only k elements in that queue
+//           if(pq.size() > k)
+//               pq.poll();
+       }
+       ArrayList<Integer> result = new ArrayList<>();
+       
+       while(list.size() < k){
+           Map.Entry<int[],Integer> entry = pq.poll();
+           ArrayList<Integer> list = new ArrayList<>();
+           list.add(entry.getKey()[0]);
+           list.add(entry.getKey()[1]);
+           result.add(list);
+       }
+       return result;
+       
+       
+       
+ Q2. Given an matrix, and starting from (0,0) find the shortest path to the destination which is represented using number 9 in the matrix.
+ Matrix = [[1,0,0], [1,0,0], [1,9,1]]
+ Target = Reach 9 
+ Output = 3 
+ Path followed = (0,0) -> (1,0) -> (2,0) -> (2,1)
+ So minimum distance needed = 3
+ 
+ SOLUTION: 
+ i) USING DFS APPROACH:
+class Solution
+{
+ public static void main(String[] args) 
+    {
+        int[][] grid = {{1,0,0},{1, 0, 0},{1,9,1} };
+        int[][] visited = new int[3][3];
+        System.out.println(solution1(grid,visited,0,0,Integer.MAX_VALUE, 0));;      
+   }
+ static int solution1(int[][] mat,  int[][] visited, int i, int j, int min_dist, int dist) 
+    {
+        
+		// if destination is found, update min_dist
+		if (mat[i][j] == 9)
+		{
+                    return Integer.min(dist, min_dist);
+		}
+
+		// set (i, j) cell as visited
+		visited[i][j] = 1;
+
+		// go to bottom cell
+		if (isValid(i + 1, j) && isSafe(mat, visited, i + 1, j)) {
+			min_dist = solution1(mat, visited, i + 1, j,min_dist, dist + 1);
+		}
+
+		// go to right cell
+		if (isValid(i, j + 1) && isSafe(mat, visited, i, j + 1)) {
+			min_dist = solution1(mat, visited, i, j + 1,min_dist, dist + 1);
+		}
+
+		// go to top cell
+		if (isValid(i - 1, j) && isSafe(mat, visited, i - 1, j)) {
+			min_dist = solution1(mat, visited, i - 1, j,min_dist, dist + 1);
+		}
+
+		// go to left cell
+		if (isValid(i, j - 1) && isSafe(mat, visited, i, j - 1)) {
+			min_dist = solution1(mat, visited, i, j - 1,min_dist, dist + 1);
+		}
+
+		// Backtrack - Remove (i, j) from visited matrix
+		visited[i][j] = 0;
+
+		return min_dist;
+    }
+    
+    private static boolean isSafe(int mat[][], int visited[][], int x, int y)
+	{
+		return !(mat[x][y] == 0 || visited[x][y] != 0);
+	}
+
+	// if not a valid position, return false
+	private static boolean isValid(int x, int y)
+	{
+		return (x < 3 && y < 3 && x >= 0 && y >= 0);
+	}
+}
+//End of solution 1 using DFS 
+//The problem with DFS was it ran with few cases, while gave Time Limit Exceeded for remaining cases
+
+
+ii) USING BFS APPROACH
+
+class MyNode
+{
+	// (x, y) represents matrix cell coordinates
+	// dist represent its minimum distance from the source
+	int x, y, dist;
+
+	MyNode(int x, int y, int dist) {
+		this.x = x;
+		this.y = y;
+		this.dist = dist;
+	}
+};
+
+public class Solution 
+{   
+    private static final int row[] = { -1, 0, 0, 1 };
+	  private static final int col[] = { 0, -1, 1, 0 };
+        
+   public static void main(String[] args) 
+    {
+        int[][] grid = {{1,0,0},{1, 0, 0},{1,9,1} };
+        solution2(grid,0,0) ;//(0,0) is the starting position in the matrix
+    }
+    
+    private static void solution2(int mat[][], int i, int j)
+	{
+		// construct a matrix to keep track of visited cells
+		boolean[][] visited = new boolean[mat.length][mat[0].length];
+
+		// create an empty queue
+		Queue<MyNode> q = new ArrayDeque<>();
+
+		// mark source cell as visited and enqueue the source node
+		visited[i][j] = true;
+		q.add(new MyNode(i, j, 0));
+
+		// stores length of longest path from source to destination
+		int min_dist = Integer.MAX_VALUE;
+
+		// run till queue is not empty
+		while (!q.isEmpty())
+		{
+			// pop front node from queue and process it
+			MyNode node = q.poll();
+
+			// (i, j) represents current cell and dist stores its
+			// minimum distance from the source
+			i = node.x;
+			j = node.y;
+			int dist = node.dist;
+
+			// if destination is found, update min_dist and stop
+			if (mat[i][j] == 9)
+			{
+				min_dist = dist;
+				break;
+			}
+
+			// check for all 4 possible movements from current cell
+			// and enqueue each valid movement
+			for (int k = 0; k < 4; k++)
+			{
+				// check if it is possible to go to position
+				// (i + row[k], j + col[k]) from current position
+				if (isValidNew(mat, visited, i + row[k], j + col[k]))
+				{
+					// mark next cell as visited and enqueue it
+					visited[i + row[k]][j + col[k]] = true;
+					q.add(new MyNode(i + row[k], j + col[k], dist + 1));
+				}
+			}
+		}
+
+		if (min_dist != Integer.MAX_VALUE) {
+			System.out.println("The shortest path from source to destination "
+							+ "has length " + min_dist);
+		}
+		else {
+			System.out.println("Destination can't be reached from source");
+		}
+	}
+    
+     private static boolean isValidNew(int mat[][], boolean visited[][],int row, int col)
+	{
+                int M = mat.length;
+                int N = mat[0].length;
+		return (row >= 0) && (row < M) && (col >= 0) && (col < N)&& (mat[row][col] == 1 || mat[row][col] == 9 ) && !visited[row][col];
+	
+  }
+
+   
+
+
+
+ 
+ 
